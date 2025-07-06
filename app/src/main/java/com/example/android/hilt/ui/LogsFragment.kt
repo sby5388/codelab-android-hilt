@@ -17,7 +17,6 @@
 package com.example.android.hilt.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,19 +24,35 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.hilt.LogApplication
 import com.example.android.hilt.R
 import com.example.android.hilt.data.Log
-import com.example.android.hilt.data.LoggerLocalDataSource
+import com.example.android.hilt.data.LoggerDataSource
+import com.example.android.hilt.di.DatabaseLogger
 import com.example.android.hilt.util.DateFormatter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Fragment that displays the database logs.
+ * 如要让 LogsFragment 使用 Hilt，我们需要为其添加 @AndroidEntryPoint 注解。
+ * @AndroidEntryPoint 注解会创建一个沿袭 Android 类生命周期的依赖项容器。
+ * 利用 @AndroidEntryPoint，Hilt 可创建附着于 LogsFragment 生命周期的依赖项容器，并能够将实例注入 LogsFragment
  */
+@AndroidEntryPoint
 class LogsFragment : Fragment() {
 
-    private lateinit var logger: LoggerLocalDataSource
-    private lateinit var dateFormatter: DateFormatter
+    /**
+     * 对于要进行注入的字段（例如 logger 和 dateFormatter），
+     * 我们可以利用 @Inject 注解让 Hilt 注入不同类型的实例：
+     * 由 Hilt 注入的字段不能是私有字段。
+     *
+     */
+    @DatabaseLogger
+    @Inject
+    lateinit var logger: LoggerDataSource
+
+    @Inject
+    lateinit var dateFormatter: DateFormatter
 
     private lateinit var recyclerView: RecyclerView
 
@@ -53,18 +68,6 @@ class LogsFragment : Fragment() {
         recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(true)
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        populateFields(context)
-    }
-
-    private fun populateFields(context: Context) {
-        logger = (context.applicationContext as LogApplication).serviceLocator.loggerLocalDataSource
-        dateFormatter =
-            (context.applicationContext as LogApplication).serviceLocator.provideDateFormatter()
     }
 
     override fun onResume() {

@@ -17,13 +17,14 @@
 package com.example.android.hilt
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
+/**
+ * https://developer.android.google.cn/codelabs/android-hilt?hl=zh_cn#3
+ * @HiltAndroidApp 会触发 Hilt 的代码生成操作，生成的代码包括应用的一个基类，该基类可使用依赖项注入。
+ * application 容器是应用的父级容器，这意味着其他容器可以访问它提供的依赖项。
+ */
+@HiltAndroidApp
 class LogApplication : Application() {
 
-    lateinit var serviceLocator: ServiceLocator
-
-    override fun onCreate() {
-        super.onCreate()
-        serviceLocator = ServiceLocator(applicationContext)
-    }
 }
