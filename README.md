@@ -33,6 +33,7 @@ Implementing dependency injection provides you with the following advantages:
 * [Full codelab comparison](https://github.com/googlecodelabs/android-hilt/compare/main...solution)
 
 
+
 # License
 
 ```
@@ -50,3 +51,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+# 其他
+* [官方教程](https://developer.android.google.cn/codelabs/android-hilt?hl=zh_cn#0)
